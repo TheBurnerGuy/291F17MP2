@@ -1,5 +1,6 @@
 #Phase 1 - Preparing data files
 #Uses python2
+#Issues: not ordered from t to o to a
 
 import sys
 
@@ -13,11 +14,10 @@ recs = open("recs.txt", 'w')
 all_input = sys.stdin.readlines()
 print(len(all_input))
 for line_input in all_input: # Stops the program from looping infinitely
-    #line_input = raw_input()
-    print("Hey im doing something")
-    print(line_input)
+    
+    #print(line_input)
     #Base case: end of file reached
-    if (line_input == "</dblp>" or len(line_input)==0):
+    if (line_input == "</dblp>\n" or len(line_input)==0):
         break
         
     #Segment line into different pieces according to the tags
@@ -36,10 +36,10 @@ for line_input in all_input: # Stops the program from looping infinitely
                 keyEnd = i
                 break
     key = xml_split[0][keyStart:keyEnd]
-    print(key)
+    #print(key)
     
     #Record in recs.txt
-    recs.write(key+":"+line_input.replace("\\", "&92;")+"\n")
+    recs.write(key+":"+line_input.replace("\\", "&#92;"))#+"\n"
     
     #Get terms and record them(make sure to lowercase!)
     for i in range(1, len(xml_split)-1, 2):
