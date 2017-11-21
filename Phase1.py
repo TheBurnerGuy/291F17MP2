@@ -1,6 +1,8 @@
 #Phase 1 - Preparing data files
 #Uses python2
 
+import sys
+
 raw_input() #First line is garbage in XML file
 line_input = "example"
 
@@ -8,10 +10,14 @@ terms = open("terms.txt", 'w')
 years = open("years.txt", 'w')
 recs = open("recs.txt", 'w')
 
-while(line_input != ""): # Stops the program from looping infinitely
-    line_input = raw_input()
+all_input = sys.stdin.readlines()
+print(len(all_input))
+for line_input in all_input: # Stops the program from looping infinitely
+    #line_input = raw_input()
+    print("Hey im doing something")
+    print(line_input)
     #Base case: end of file reached
-    if (line_input == "</dblp>"):
+    if (line_input == "</dblp>" or len(line_input)==0):
         break
         
     #Segment line into different pieces according to the tags
@@ -66,3 +72,4 @@ while(line_input != ""): # Stops the program from looping infinitely
 terms.close()
 years.close()
 recs.close()
+print("Done!")
