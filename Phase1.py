@@ -53,13 +53,13 @@ while line_input != "</dblp>": # Stops the program from looping infinitely
             tags_split = xml_split[i][7:].lower().split() #split title terms
             for tag in tags_split:
                 if len(tag) > 2: #make sure term length > 2
-                    terms.write("a-"+tag+":"+key+"\n")
+                    terms.write("a-"+filter(str.isalnum, tag)+":"+key+"\n")
         #Term is title
         elif xml_split[i][0:5] == "title":
             tags_split = xml_split[i][6:].lower().split() #split title terms
             for tag in tags_split:
                 if len(tag) > 2: #make sure term length > 2
-                    terms.write("t-"+tag+":"+key+"\n")
+                    terms.write("t-"+filter(str.isalnum, tag)+":"+key+"\n")
         #Term is year
         elif xml_split[i][0:4] == "year":
             years.write(xml_split[i][5:]+":"+key+"\n")
