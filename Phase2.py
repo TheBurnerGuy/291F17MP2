@@ -31,3 +31,8 @@ for file_o, file_n in [(terms, terms_new), (years, years_new), (recs, recs_new)]
         #Find colon then split line into two lines
         line = line.split(':', 1)
         file_n.write(line[0] + "\n" + line[1] + "\n")
+
+#In command line, use the following commands after phase2:
+#db_load -f terms_new.txt -t btree terms.idx 
+#db_load -f years_new.txt -t btree years.idx 
+#db_load -f records_new.txt -t hash terms.idx 
