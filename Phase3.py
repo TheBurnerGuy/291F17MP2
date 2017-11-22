@@ -5,6 +5,17 @@ database.set_flags(db.DB_DUP) #declare duplicates allowed before you create the 
 database.open(DB_File,None, db.DB_BTREE, db.DB_CREATE)
 curs = database.cursor()
 
+
+
+
+
+
+
+
+'''
+T E M P L A T E 
+C O D E
+
 while(True):
     name = input("Enter a student Name to look up: ")
     if(name == "q"): #Termination Condition
@@ -32,3 +43,5 @@ while(True):
 
 curs.close()
 database.close()
+
+'''

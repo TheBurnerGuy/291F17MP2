@@ -35,7 +35,7 @@ for file_o, file_n in [(terms, terms_new), (years, years_new), (recs, recs_new)]
 
 #In command line, use the following commands after phase2:
 '''
-db_load -f terms_new.txt -t btree -T terms.idx
-db_load -f years_new.txt -t btree -T years.idx
-db_load -f recs_new.txt -t hash -T recs.idx
+db_load -c duplicates=1 -f terms_new.txt -t btree -T terms.idx
+db_load -c duplicates=1 -f years_new.txt -t btree -T years.idx
+db_load -c duplicates=1 -f recs_new.txt -t hash -T recs.idx
 '''
