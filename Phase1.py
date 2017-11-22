@@ -7,6 +7,7 @@ import sys
 if len(sys.argv) > 1: # Text file name is given
     temp_file = open(sys.argv[1], 'r')
 else: # Else read from standard input
+    print("Needs text file name as first argument")
     exit()
 
 temp_file.readline() #First line is garbage in XML file
