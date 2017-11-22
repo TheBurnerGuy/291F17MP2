@@ -1,9 +1,12 @@
 from bsddb3 import db
-DB_File = "students.db"
-database = db.DB()
-database.set_flags(db.DB_DUP) #declare duplicates allowed before you create the database
-database.open(DB_File,None, db.DB_BTREE, db.DB_CREATE)
-curs = database.cursor()
+terms_db = db.DB()
+years_db = db.DB()
+recs_db = db.DB()
+terms_db.open("terms.idx",None, db.DB_UNKNOWN, None)
+years_db.open("years.idx",None, db.DB_UNKNOWN, None)
+recs_db.open("recs.idx",None, db.DB_UNKNOWN, None)
+
+#curs = database.cursor()
 
 
 
