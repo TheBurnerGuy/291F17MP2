@@ -4,20 +4,25 @@
 
 import sys
 
-raw_input() #First line is garbage in XML file
+if len(sys.argv) > 1: # Text file name is given
+    temp_file = open(sys.argv[1], 'r')
+else: # Else read from standard input
+    exit()
+
+temp_file.readline() #First line is garbage in XML file
 line_input = "example"
 
 terms = open("terms.txt", 'w')
 years = open("years.txt", 'w')
 recs = open("recs.txt", 'w')
 
-all_input = sys.stdin.readlines()
-print(len(all_input))
-for line_input in all_input: # Stops the program from looping infinitely
+while line_input != "</dblp>": # Stops the program from looping infinitely
+    
+    line_input = temp_file.readline()
     
     #print(line_input)
     #Base case: end of file reached
-    if (line_input == "</dblp>\n" or len(line_input)==0):
+    if (line_input == "</dblp>\n" or line_input == "</dblp>" or len(line_input)==0):
         break
         
     #Segment line into different pieces according to the tags
@@ -72,4 +77,5 @@ for line_input in all_input: # Stops the program from looping infinitely
 terms.close()
 years.close()
 recs.close()
+temp_file.close()
 print("Done!")
