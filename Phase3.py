@@ -6,8 +6,26 @@ terms_db.open("terms.idx",None, db.DB_UNKNOWN, None)
 years_db.open("years.idx",None, db.DB_UNKNOWN, None)
 recs_db.open("recs.idx",None, db.DB_UNKNOWN, None)
 
-#curs = database.cursor()
-
+#Query1
+curs = database.cursor()
+while(True):
+	
+	title = input("title: ")
+	result = curs.set(title.encode("utf-8"))
+	
+	if(result != None):
+		print(str(result[0].decode("utf-8")))
+		
+		dup = curs.next_dup()
+		while(dup != None):
+			print(str(dup[0].decode("utf-8")))
+			dup = curs.next_dup()
+		else:
+			print("No Entry Found.")
+			
+			
+curs.close()
+database.close()
 
 
 
