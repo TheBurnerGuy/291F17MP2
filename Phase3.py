@@ -24,8 +24,8 @@ def parseAndSearch(query, terms_db, years_db):
 	results = []
 	finalresults = []
 	for i in query.split():
-		if len(i) >= 4 and i[:4] == 'year':
-			results.append(searchYears(i[4:], years_db))
+		if len(i) >= 4 and i[4] == ':':
+			results.append(searchYears(i[5:], years_db))
 		else:
 			results.append(searchTerms(i, terms_db))
 				
@@ -130,7 +130,43 @@ def displayResults(recs)
 	if output == "output=full":
 		format = 1 # Full
 
+	for result in results:
+		words = result[1].decode('utf-8').split()
+		# Identify types
+		
+		i = 0
+		for i in range len(words) - 3:
+			if words[i:i+3] == ':<a':
+				type = 'a'  # article
+			elif words[i:i+3] == ':<i':
+				type = 'i'  # inproceedings
+				
+		
+		
+		
+		
+'''
+Format
 
+article key
+author
+title
+pages
+year
+journal
+
+journals/acta/Saxena96:<article key="journals/acta/Saxena96"><author>Sanjeev Saxena</author><title>Parallel Integer Sorting and Simulation Amongst CRCW Models.</title><pages>607-619</pages><year>1996</year><journal>Acta Inf.</journal></article>
+
+inproceedings key
+author
+title
+pages
+year
+booktitle
+
+journals/lncs/Comon94:<inproceedings key="journals/lncs/Comon94"><author>Hubert Comon</author><title>Constraints in Term Algebras: An Overview of Constraint Solving Techniques</title><pages>62-67</pages><booktitle>Constraint Programming</booktitle><year>1994</year></inproceedings>
+'''
+		
 '''
 REFERENCE CODE
 
