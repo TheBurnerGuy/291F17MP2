@@ -49,21 +49,25 @@ def parseAndSearch(query, terms_db, years_db):
 				finalResultsTemp.append(result)
 		# Remove duplicate recs
 		for index1 in range(len(finalResultsTemp)):
-			foundDuplicate = False
-			for index2 in range(index1+1, len(finalResultsTemp)):
-				if finalResultsTemp[index1][1] == finalResultsTemp[index2][1]:
-				   foundDuplicate = True
-			if not foundDuplicate:
-			   finalResults.append(finalResultsTemp[index1])
+			if finalResultsTemp[0][index1] not in finalResults:
+				finalResults.append(results[0][index1])
+			#foundDuplicate = False
+			#for index2 in range(index1+1, len(finalResultsTemp)):
+				#if finalResultsTemp[index1][1] == finalResultsTemp[index2][1]:
+					#foundDuplicate = True
+			#if not foundDuplicate:
+				#finalResults.append(finalResultsTemp[index1])
 	else:
 		# Remove duplicate recs
 		for index1 in range(len(results[0])):
-			foundDuplicate = False
-			for index2 in range(index1+1, len(results[0])):
-				if results[0][index1][1] == results[0][index2][1]:
-				   foundDuplicate = True
-			if not foundDuplicate:
-			   finalResults.append(results[0][index1])
+			if results[0][index1] not in finalResults:
+				finalResults.append(results[0][index1])
+			#foundDuplicate = False
+			#for index2 in range(index1+1, len(results[0])):
+				#if results[0][index1][1] == results[0][index2][1]:
+				   #foundDuplicate = True
+			#if not foundDuplicate:
+				#finalResults.append(results[0][index1])
 	return finalResults
 
 				
@@ -136,7 +140,7 @@ def getRecs(results, recs_db):
 	recs = []
 	curs = recs_db.cursor()
 	for result in results:
-		re = curs.set(result[1])
+		re = curs.get(result[1])
 		if re:
 			recs.append(re)
 	curs.close()
