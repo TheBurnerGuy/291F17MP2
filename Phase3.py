@@ -8,8 +8,8 @@ def phase3():
 	years_db.open("years.idx",None, db.DB_BTREE, DB_CREATE)
 	recs_db.open("recs.idx",None, db.DB_HASH, DB_CREATE)
 	curs = database.cursor()
-	global format
-	format = 0
+	global format_global
+	format_global = 0
 
 	while(True):
 		
@@ -18,8 +18,7 @@ def phase3():
 			break
 		
 		results = parseAndSearch(inp, terms_db, years_db)
-		recs = getRecs(results, recs_db)
-		displayResults(recs)
+		displayResults(results, recs_db)
 		
 	
 def parseAndSearch(query, terms_db, years_db):
@@ -92,7 +91,9 @@ def searchTerms(query, terms_db):
 		keys.append('o-' + query[6:].lower())
 	elif len(query) >= 7 and query[:7] == 'output=':
 		if query[7:] == 'full':
-			format = 1
+			format_global = 1
+		elif query[7:] == 'key':
+			format_global = 0
 	else:
 		keys.append('t-' + query.lower())
 		keys.append('a-' + query.lower())
@@ -146,42 +147,34 @@ def searchYears(query, years_db):
 			result = curs.prev()		
 	return results
 
-def getRecs(results, recs_db):
+
+def displayResults(results, recs_db):
+	
+	if format_global == 0:
+		for result in results:
+			print result
+			
+		return
+	
+	# Full Output
+	
 	recs = []
 	curs = recs_db.cursor()
 	for result in results:
-		re = curs.get(result[1])
+		
+		re = curs.get(result[1].encode('ascii', 'ignore'))
 		if re:
 			recs.append(re)
-	curs.close()
-	return recs
-
-def displayResults(recs):
-
+	curs.close()	
+	
+	
 	for result in recs:
 		words = result[1].decode('utf-8').split()
-		
-		for i in range (len(words)):
-			if words[i] == ':':
-				key = words[:i]
-		
-
-		if format == 0:  # Full output
-			print key
-		else:
-			print words
-			
-
-
-
-					
-
-				
-				
-		
-		
-		
-		
+		print words
+	
+	
+	return
+	
 '''
 Format
 
@@ -192,7 +185,7 @@ pages
 year
 journal
 
-journals/acta/Saxena96:<article key="journals/acta/Saxena96"><author>Sanjeev Saxena</author><title>Parallel Integer Sorting and Simulation Amongst CRCW Models.</title><pages>607-619</pages><year>1996</year><journal>Acta Inf.</journal></article>
+<article key="journals/acta/Saxena96"><author>Sanjeev Saxena</author><title>Parallel Integer Sorting and Simulation Amongst CRCW Models.</title><pages>607-619</pages><year>1996</year><journal>Acta Inf.</journal></article>
 
 inproceedings key
 author
@@ -201,7 +194,7 @@ pages
 year
 booktitle
 
-journals/lncs/Comon94:<inproceedings key="journals/lncs/Comon94"><author>Hubert Comon</author><title>Constraints in Term Algebras: An Overview of Constraint Solving Techniques</title><pages>62-67</pages><booktitle>Constraint Programming</booktitle><year>1994</year></inproceedings>
+<inproceedings key="journals/lncs/Comon94"><author>Hubert Comon</author><title>Constraints in Term Algebras: An Overview of Constraint Solving Techniques</title><pages>62-67</pages><booktitle>Constraint Programming</booktitle><year>1994</year></inproceedings>
 '''
 		
 '''
