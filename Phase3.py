@@ -86,6 +86,8 @@ def searchTerms(query, terms_db):
 		keys.append('t-' + query.lower())
 		keys.append('a-' + query.lower())
 		keys.append('o-' + query.lower())
+		
+	# Double check fot fomatting
 
 	if partialMatch:
 		for key in keys:
@@ -112,6 +114,21 @@ def searchTerms(query, terms_db):
 	return results
 
 
+def getRecs(results, recs_db):
+	recs = []
+	curs = recs_db.cursor()
+	for result in results:
+		re = curs.set(result[1])
+		if re:
+			recs.append(re)
+	curs.close()
+	return recs
+
+def displayResults(recs)
+	format = 0 # Default: key
+# Prompt for full or key results
+	if output == "output=full":
+		format = 1 # Full
 
 
 
