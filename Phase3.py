@@ -124,52 +124,28 @@ def getRecs(results, recs_db):
 	curs.close()
 	return recs
 
-def displayResults(recs)
+def displayResults(recs):
 	format = 0 # Default: key
 # Prompt for full or key results
 	if output == "output=full":
 		format = 1 # Full
+		
 
-	for result in results:
+	for result in recs:
 		words = result[1].decode('utf-8').split()
-		# Identify types
 		
-		i = 0
-		for i in range (len(words) - 3):
-			if words[i:i+3] == ':<a':
-				type = 'a'  # article
-				break
-			elif words[i:i+3] == ':<i':
-				type = 'i'  # inproceedings
-				break
+		for i in range (len(words)):
+			if words[i] == ':':
+				key = words[:i]
 		
-		if type = 'a':
-			i += 15
-			j = i
-			for j in range (len(words) - 2):
-				if words[j:j+2] == '">':
-					article_key = words[i:j-1]
-					break
-			if format == 1:  # Full output
-			# article
-				
-				i = j
-				author = []
+		if format == 0:  # Full output
+			print key
+		else:
+			print words
 			
-				for i in range (len(words) - 8):
-					if words[i:i+8] == '<author>':
-						i += 8
-						for j in range (len(words) - 7):
-							if words[j:j+9] == '</author>':
-								author.append(words[i:j])
-								break
-			
-			# title 
-				i = j
-				
-				for i in range (len(words) - 7)
-			
-			
+
+
+
 					
 				
 				
