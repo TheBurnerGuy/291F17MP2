@@ -150,8 +150,19 @@ def displayResults(recs)
 				if words[j:j+2] == '">':
 					article_key = words[i:j-1]
 					break
-			
+			i = j
 			author = []
+			
+			for i in range (len(words) - 6):
+				if words[i:i+8] == '<author>':
+					i += 8
+					for j in range (len(words) - 7):
+						if words[j:j+9] == '</author>':
+							author.append(words[i:j])
+							break
+			
+			# title
+					
 			
 			
 					
