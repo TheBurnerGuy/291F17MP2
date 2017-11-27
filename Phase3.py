@@ -68,7 +68,6 @@ def parseAndSearch(query, terms_db, years_db):
 
 				
 def searchTerms(query, terms_db):
-	partialMatch = False
 	keys = []
 	results = []
 	curs = terms_db.cursor()
@@ -85,7 +84,7 @@ def searchTerms(query, terms_db):
 		keys.append('a-' + query.lower())
 		keys.append('o-' + query.lower())
 		
-	# Double check fot fomatting
+	# Double check for fomatting
 
 	for key in keys:
 		key = key.encode('ascii','ignore')
@@ -98,8 +97,40 @@ def searchTerms(query, terms_db):
 	curs.close()
 	return results
 
-def searchYears(query, terms_db):
-	return
+def searchYears(query, years_db):
+	results = []
+	curs = years_db.cursor()
+	
+	key = query.encode('ascii', 'ignore')
+	result = curs.get(key)
+	
+	if query[0] == ':':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+	elif query[0] == '>':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+			
+		#Go forward until reach the end of the file
+		result = curs.next()
+		while result:
+			results.append(result)
+			result = curs.next()
+	elif query[0] == '<':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+			#Go forward until reach the end of the file
+		result = curs.prev()
+		while result:
+			results.append(result)
+			result = curs.prev()		
+	return results
 
 def getRecs(results, recs_db):
 	recs = []
