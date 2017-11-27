@@ -1,5 +1,7 @@
 from bsddb3 import db
+import sys
 
+#Runs in python3
 format_global = 0
 
 def phase3():
@@ -23,13 +25,17 @@ def phase3():
 def parseAndSearch(query, terms_db, years_db, recs_db):
 	results = []
 	finalResults = []
-	for i in query.split():
-		if len(i) >= 4 and i[:4] == 'year':
-			results.append(searchYears(i[4:], years_db))
-		else:
-			checkOutput = searchTerms(i, terms_db, recs_db)
-			if checkOutput != []:
-				results.append(searchTerms(i, terms_db, recs_db))
+	
+	if query[:7] == "title:\"":
+		results.append(searchTerms(query, terms_db, recs_db))
+	else:
+		for i in query.split():
+			if len(i) >= 4 and i[:4] == 'year':
+				results.append(searchYears(i[4:], years_db))
+			else:
+				checkOutput = searchTerms(i, terms_db, recs_db)
+				if checkOutput != []:
+					results.append(searchTerms(i, terms_db, recs_db))
 			
 				
 	if len(results) > 1:
@@ -52,26 +58,26 @@ def parseAndSearch(query, terms_db, years_db, recs_db):
 				finalResultsTemp.append(result)
 		# Remove duplicate recs
 		for index1 in range(len(finalResultsTemp)):
-			if finalResultsTemp[0][index1] not in finalResults:
-				finalResults.append(results[0][index1])
-			#foundDuplicate = False
-			#for index2 in range(index1+1, len(finalResultsTemp)):
-				#if finalResultsTemp[index1][1] == finalResultsTemp[index2][1]:
-					#foundDuplicate = True
-			#if not foundDuplicate:
-				#finalResults.append(finalResultsTemp[index1])
+			#if finalResultsTemp[0][index1] not in finalResults:
+				#finalResults.append(results[0][index1])
+			foundDuplicate = False
+			for index2 in range(index1+1, len(finalResultsTemp)):
+				if finalResultsTemp[index1][1] == finalResultsTemp[index2][1]:
+					foundDuplicate = True
+			if not foundDuplicate:
+				finalResults.append(finalResultsTemp[index1])
 	else:
 		# Remove duplicate recs
 		if len(results) > 0: # Checks if only the format_global was changed
 			for index1 in range(len(results[0])):
-				if results[0][index1] not in finalResults:
-					finalResults.append(results[0][index1])
-				#foundDuplicate = False
-				#for index2 in range(index1+1, len(results[0])):
-					#if results[0][index1][1] == results[0][index2][1]:
-					   #foundDuplicate = True
-				#if not foundDuplicate:
+				#if results[0][index1] not in finalResults:
 					#finalResults.append(results[0][index1])
+				foundDuplicate = False
+				for index2 in range(index1+1, len(results[0])):
+					if results[0][index1][1] == results[0][index2][1]:
+						foundDuplicate = True
+				if not foundDuplicate:
+					finalResults.append(results[0][index1])
 	return finalResults
 
 				
@@ -85,12 +91,13 @@ def searchTerms(query, terms_db, recs_db):
 	# Create the keys
 	if len(query) >= 6 and query[:6] == 'title:':
 		if query[6] == '"':
-			temp = query[7:(len(query)-1)].split()
+			temp = query[7:(len(query))][:-1].split()
+			#print(temp)
 			for word in temp:
 				# The special case where ordering actually matters
-				keystemp.append('t-' + word.lower())
+				keys.append('t-' + word.lower())
 				
-			for key in keystemp:
+			for key in keys:
 				key = key.encode('ascii','ignore')
 				#print(key)
 				result = curs.get(key, db.DB_SET)
@@ -101,11 +108,22 @@ def searchTerms(query, terms_db, recs_db):
 				
 			# Parse recs.idx
 			curs = recs_db.cursor()
+			tempResults = []
+			#print(results)
 			for result in results:
-				curs.get(result, db.DB_SET)
-				
+				#print(result)
+				parseResult = curs.get(result[1], db.DB_SET)[1].decode('utf-8')
+				parseResult = parseResult.split("<title>")[1].split("</title>")[0].lower()
+				#print(parseResult)
+				#print(query[7:(len(query)-1)])
+				foundSubString = parseResult.find(query[7:(len(query)-1)])
+				#print(foundSubString)
+				if foundSubString>=0:
+					if result not in tempResults:
+						tempResults.append(result)
 			
-			return results
+			#print(tempResults)
+			return tempResults
 			#END SPECIAL CASE
 		else:	
 			keys.append('t-' + query[6:].lower())
