@@ -8,6 +8,8 @@ def phase3():
 	years_db.open("years.idx",None, db.DB_BTREE, DB_CREATE)
 	recs_db.open("recs.idx",None, db.DB_HASH, DB_CREATE)
 	curs = database.cursor()
+	global format
+	format = 0
 
 	while(True):
 		
@@ -78,11 +80,19 @@ def searchTerms(query, terms_db):
 
 	# Create the keys
 	if len(query) >= 6 and query[:6] == 'title:':
-		keys.append('t-' + query[6:].lower())
+		if query[6] == '"':
+			temp = query[7:(len(query)-1)].split()
+			for word in temp:
+				keys.append('t-' + word.lower())
+		else:	
+			keys.append('t-' + query[6:].lower())
 	elif len(query) >= 7 and query[:7] == 'author:':
 		keys.append('a-' + query[7:].lower())
 	elif len(query) >= 6 and query[:6] == 'other:':
 		keys.append('o-' + query[6:].lower())
+	elif len(query) >= 7 and query[:7] == 'output=':
+		if query[7:] == 'full':
+			format = 1
 	else:
 		keys.append('t-' + query.lower())
 		keys.append('a-' + query.lower())
@@ -147,11 +157,6 @@ def getRecs(results, recs_db):
 	return recs
 
 def displayResults(recs):
-	format = 0 # Default: key
-# Prompt for full or key results
-	if output == "output=full":
-		format = 1 # Full
-		
 
 	for result in recs:
 		words = result[1].decode('utf-8').split()
@@ -338,3 +343,4 @@ curs.close()
 database.close()
 
 '''
+<<<<<<< HEAD
