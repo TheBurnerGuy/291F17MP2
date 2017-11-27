@@ -68,12 +68,9 @@ def parseAndSearch(query, terms_db, years_db):
 
 				
 def searchTerms(query, terms_db):
-	partialMatch = False
 	keys = []
 	results = []
 	curs = terms_db.cursor()
-	if query[-1] == '%':
-		partialMatch = True
 
 	# Create the keys
 	if len(query) >= 6 and query[:6] == 'title:':
@@ -87,32 +84,53 @@ def searchTerms(query, terms_db):
 		keys.append('a-' + query.lower())
 		keys.append('o-' + query.lower())
 		
-	# Double check fot fomatting
+	# Double check for fomatting
 
-	if partialMatch:
-		for key in keys:
-			skey = key[:-1]
-			key = key[:-1].encode('ascii','ignore')
-			result = curs.set_range(key)
-			if result:
-				resultKey = result[0].decode('utf-8')
-				# Scan and add results until the prefix is no longer found
-				while len(resultKey) >= len(skey) and resultKey[:len(key)] == skey:
-					results.append(result)
-					result = curs.next()
-					resultKey = result[0].decode('utf-8')
-	else:
-		for key in keys:
-			key = key.encode('ascii','ignore')
-			result = curs.set(key)
-			# Add all the duplicates aswell
-			while result:
-				results.append(result)
-				result = curs.next_dup()
+	for key in keys:
+		key = key.encode('ascii','ignore')
+		result = curs.get(key)
+		# Add all the duplicates aswell
+		while result:
+			results.append(result)
+			result = curs.next_dup()
 
 	curs.close()
 	return results
 
+def searchYears(query, years_db):
+	results = []
+	curs = years_db.cursor()
+	
+	key = query.encode('ascii', 'ignore')
+	result = curs.get(key)
+	
+	if query[0] == ':':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+	elif query[0] == '>':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+			
+		#Go forward until reach the end of the file
+		result = curs.next()
+		while result:
+			results.append(result)
+			result = curs.next()
+	elif query[0] == '<':
+		#Get all duplicates
+		while result:
+			results.append(result)
+			result = curs.next_dup()
+			#Go forward until reach the end of the file
+		result = curs.prev()
+		while result:
+			results.append(result)
+			result = curs.prev()		
+	return results
 
 def getRecs(results, recs_db):
 	recs = []
@@ -138,6 +156,7 @@ def displayResults(recs):
 			if words[i] == ':':
 				key = words[:i]
 		
+
 		if format == 0:  # Full output
 			print key
 		else:
@@ -147,6 +166,7 @@ def displayResults(recs):
 
 
 					
+
 				
 				
 		
