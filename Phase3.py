@@ -135,11 +135,27 @@ def displayResults(recs)
 		# Identify types
 		
 		i = 0
-		for i in range len(words) - 3:
+		for i in range (len(words) - 3):
 			if words[i:i+3] == ':<a':
 				type = 'a'  # article
+				break
 			elif words[i:i+3] == ':<i':
 				type = 'i'  # inproceedings
+				break
+		
+		if type = 'a':
+			i += 15
+			j = i
+			for j in range (len(words) - 2):
+				if words[j:j+2] == '">':
+					article_key = words[i:j-1]
+					break
+			
+			author = []
+			
+			
+					
+				
 				
 		
 		
