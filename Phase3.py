@@ -72,8 +72,6 @@ def searchTerms(query, terms_db):
 	keys = []
 	results = []
 	curs = terms_db.cursor()
-	if query[-1] == '%':
-		partialMatch = True
 
 	# Create the keys
 	if len(query) >= 6 and query[:6] == 'title:':
@@ -89,30 +87,19 @@ def searchTerms(query, terms_db):
 		
 	# Double check fot fomatting
 
-	if partialMatch:
-		for key in keys:
-			skey = key[:-1]
-			key = key[:-1].encode('ascii','ignore')
-			result = curs.set_range(key)
-			if result:
-				resultKey = result[0].decode('utf-8')
-				# Scan and add results until the prefix is no longer found
-				while len(resultKey) >= len(skey) and resultKey[:len(key)] == skey:
-					results.append(result)
-					result = curs.next()
-					resultKey = result[0].decode('utf-8')
-	else:
-		for key in keys:
-			key = key.encode('ascii','ignore')
-			result = curs.set(key)
-			# Add all the duplicates aswell
-			while result:
-				results.append(result)
-				result = curs.next_dup()
+	for key in keys:
+		key = key.encode('ascii','ignore')
+		result = curs.get(key)
+		# Add all the duplicates aswell
+		while result:
+			results.append(result)
+			result = curs.next_dup()
 
 	curs.close()
 	return results
 
+def searchYears(query, terms_db):
+	return
 
 def getRecs(results, recs_db):
 	recs = []
@@ -124,7 +111,7 @@ def getRecs(results, recs_db):
 	curs.close()
 	return recs
 
-def displayResults(recs)
+def displayResults(recs):
 	format = 0 # Default: key
 # Prompt for full or key results
 	if output == "output=full":
@@ -143,7 +130,7 @@ def displayResults(recs)
 				type = 'i'  # inproceedings
 				break
 		
-		if type = 'a':
+		if type == 'a':
 			i += 15
 			j = i
 			for j in range (len(words) - 2):
@@ -169,8 +156,7 @@ def displayResults(recs)
 				
 				for i in range (len(words) - 7)
 			
-			
-					
+						
 				
 				
 		
