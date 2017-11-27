@@ -24,7 +24,7 @@ def parseAndSearch(query, terms_db, years_db):
 	results = []
 	finalresults = []
 	for i in query.split():
-		if len(i) >= 4 and i[4] == ':':
+		if len(i) >= 4 and i[:4] == 'year':
 			results.append(searchYears(i[5:], years_db))
 		else:
 			results.append(searchTerms(i, terms_db))
@@ -150,19 +150,24 @@ def displayResults(recs)
 				if words[j:j+2] == '">':
 					article_key = words[i:j-1]
 					break
-			i = j
-			author = []
+			if format == 1:  # Full output
+			# article
+				
+				i = j
+				author = []
 			
-			for i in range (len(words) - 6):
-				if words[i:i+8] == '<author>':
-					i += 8
-					for j in range (len(words) - 7):
-						if words[j:j+9] == '</author>':
-							author.append(words[i:j])
-							break
+				for i in range (len(words) - 8):
+					if words[i:i+8] == '<author>':
+						i += 8
+						for j in range (len(words) - 7):
+							if words[j:j+9] == '</author>':
+								author.append(words[i:j])
+								break
 			
-			# title
-					
+			# title 
+				i = j
+				
+				for i in range (len(words) - 7)
 			
 			
 					
